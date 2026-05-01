@@ -1,4 +1,6 @@
 using DtosProject.Services;
+using DtosProject.Data;
+using Microsoft.EntityFrameworkCore;
 namespace DtosProject;
 
 public class Program
@@ -9,7 +11,9 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
-        builder.Services.AddSingleton<ClientService>();
+        builder.Services.AddScoped<ClientService>();
+        builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
         var app = builder.Build();
 

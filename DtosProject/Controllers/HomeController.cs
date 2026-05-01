@@ -8,7 +8,7 @@ namespace DtosProject.Controllers
 {
     public class HomeController : Controller
     {
-        ClientService _clientService = new ClientService();
+        private readonly ClientService _clientService;
         
         public HomeController(ClientService clientService)
         {
@@ -16,18 +16,10 @@ namespace DtosProject.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string? search)
+        public IActionResult Index(ClientSearchDto search)
         {
-            if (!string.IsNullOrEmpty(search))
-            {
-                ViewBag.Clients = _clientService.SearchClients(search);
-                ViewBag.Search = search;
-            }
-            else
-            {
-                ViewBag.Clients = _clientService.GetAllClients();
-            }
-            return View();
+            var clients = _clientService.SearchClients(search.Request);
+            return View(clients);
         }
 
         [HttpGet]
@@ -56,7 +48,7 @@ namespace DtosProject.Controllers
         }
         
         [HttpGet]
-        public IActionResult Update(int id)
+        public IActionResult Edit(int id)
         {
             var client = _clientService.GetClientById(id);
             if (client == null) return NotFound();

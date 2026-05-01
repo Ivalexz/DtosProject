@@ -1,39 +1,39 @@
 ﻿@model DtosProject.DTOs.ClientDetailsDto
+@{ ViewData["Title"] = "Деталі клієнта"; }
 
-@{
-    ViewData["Title"] = "Client Details";
-}
+<div class="page-header">
+    <span class="page-title">Деталі клієнта</span>
+    <a href="/Home/Index" class="back-link">← Назад</a>
+</div>
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-header bg-info text-white">
-                    <h4 class="mb-0">Client Details</h4>
-                </div>
-                <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-sm-4">ID</dt>
-                        <dd class="col-sm-8">@Model.Id</dd>
-
-                        <dt class="col-sm-4">Full Name</dt>
-                        <dd class="col-sm-8">@Model.FullName</dd>
-
-                        <dt class="col-sm-4">Email</dt>
-                        <dd class="col-sm-8">@Model.Email</dd>
-
-                        <dt class="col-sm-4">Age</dt>
-                        <dd class="col-sm-8">@Model.Age</dd>
-
-                        <dt class="col-sm-4">Created At</dt>
-                        <dd class="col-sm-8">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
-                    </dl>
-                </div>
-                <div class="card-footer d-flex gap-2">
-                    <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
-                    <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
-                </div>
-            </div>
-        </div>
+<div style="display:flex; align-items:center; gap:14px;">
+    <div class="avatar">
+        @(Model.FullName.Length >= 2 ? Model.FullName.Substring(0,2).ToUpper() : Model.FullName.ToUpper())
     </div>
+    <div>
+        <div style="font-size:18px; font-weight:500;">@Model.FullName</div>
+        <span class="badge">Клієнт</span>
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="detail-grid">
+    <div class="detail-field">
+        <div class="detail-label">Email</div>
+        <div class="detail-value">@Model.Email</div>
+    </div>
+    <div class="detail-field">
+        <div class="detail-label">Вік</div>
+        <div class="detail-value">@Model.Age</div>
+    </div>
+    <div class="detail-field" style="grid-column: span 2;">
+        <div class="detail-label">Створено</div>
+        <div class="detail-value">@Model.CreatedAt.ToString("dd.MM.yyyy")</div>
+    </div>
+</div>
+
+<div style="margin-top:1.25rem; display:flex; gap:10px;">
+    <a href="/Home/Edit/@Model.Id" class="btn btn-primary">Редагувати</a>
+    <a href="/Home/Index" class="btn btn-ghost">← Назад</a>
 </div>
