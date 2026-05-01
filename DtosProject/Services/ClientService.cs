@@ -1,32 +1,29 @@
 ﻿using DtosProject.DTOs;
 using DtosProject.Models;
-using DtosProject.Data;
- 
+
 namespace DtosProject.Services
 {
     public class ClientService
     {
-        private readonly AppDbContext _db;
-        public ClientService(AppDbContext db)
-        {
-            _db = db;
-        }
-    
+        private static List<Client> _clients = new List<Client>();
+        private static int _nextId = 1;
+
         public void AddClient(CreateClientDto dto)
         {
             var obj = new Client
             {
+                Id = _nextId++,
                 FullName = dto.FullName,
                 Email = dto.Email,
                 Age = dto.Age,
                 CreatedAt = DateTime.UtcNow
             };
-            _db.Clients.Add(obj);
-            _db.SaveChanges();
+            _clients.Add(obj);
         }
+
         public List<ClientListItemDto> GetAllClients()
         {
-            return _db.Clients.Select(c => new ClientListItemDto
+            return _clients.Select(c => new ClientListItemDto
             {
                 Id = c.Id,
                 FullName = c.FullName,
@@ -34,12 +31,12 @@ namespace DtosProject.Services
             }).ToList();
         }
 
-        public ClientDetailsDto  GetClientById(int id)
+        public ClientDetailsDto GetClientById(int id)
         {
-            var client = _db.Clients.FirstOrDefault(c => c.Id == id);
+            var client = _clients.FirstOrDefault(c => c.Id == id);
             if (client == null) return null;
 
-            return new ClientDetailsDto 
+            return new ClientDetailsDto
             {
                 Id = client.Id,
                 FullName = client.FullName,
@@ -51,22 +48,21 @@ namespace DtosProject.Services
 
         public void UpdateClient(UpdateClientDto dto)
         {
-            var client = _db.Clients.FirstOrDefault(c => c.Id == dto.Id);
+            var client = _clients.FirstOrDefault(c => c.Id == dto.Id);
             if (client != null)
             {
                 client.FullName = dto.FullName;
                 client.Email = dto.Email;
                 client.Age = dto.Age;
             }
-            _db.SaveChanges();
         }
-        
+
         public List<ClientListItemDto> SearchClients(string searchText)
         {
             if (string.IsNullOrWhiteSpace(searchText))
                 return GetAllClients();
 
-            return _db.Clients
+            return _clients
                 .Where(c => c.FullName.ToLower().Contains(searchText.ToLower()) ||
                             c.Email.ToLower().Contains(searchText.ToLower()))
                 .Select(c => new ClientListItemDto
